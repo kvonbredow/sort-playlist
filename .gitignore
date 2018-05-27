@@ -1,0 +1,14 @@
+# Vim swapfiles
+*.swp
+
+# Generated protobuf source
+*.pb.go
+
+# Project Binaries
+download-pl/download-pl
+get-songinfo/get-songinfo
+sort-pl/sort-pl
+
+# Vendor directory
+vendor/*/
+!vendor/vendor.json

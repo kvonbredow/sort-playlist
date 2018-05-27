@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+service DownloadPlaylist {
+  rpc GetTracks(PlaylistRequest) returns (PlaylistResponse) {}
+}
+
+message PlaylistRequest {
+  string id = 1;
+}
+
+message PlaylistResponse {
+  repeated string ids = 1;
+}
