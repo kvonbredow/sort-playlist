@@ -5,10 +5,15 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"net"
 	"os"
 
 	"github.com/zmb3/spotify"
 	"golang.org/x/oauth2/clientcredentials"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
+
+	pb "github.com/kvonbredow/sort-playlist/download-pl"
 )
 
 type handler struct {
@@ -16,18 +21,22 @@ type handler struct {
 	user   string
 }
 
-func (h *handler) getTracks(playlist spotify.ID) ([]spotify.ID, error) {
-	playlistTracks, err := h.client.GetPlaylistTracks(h.user, playlist)
+func (h *handler) GetTracks(ctx context.Context, req *pb.PlaylistRequest) (*pb.PlaylistResponse, error) {
+	id := spotify.ID(req.Id)
+	playlistTracks, err := h.client.GetPlaylistTracks(h.user, id)
 	if err != nil {
 		msg := fmt.Sprintf("couldn't get playlist tracks: %v", err)
 		return nil, errors.New(msg)
 	}
 
-	ids := make([]spotify.ID, len(playlistTracks.Tracks))
+	ids := make([]string, len(playlistTracks.Tracks))
 	for k, pt := range playlistTracks.Tracks {
-		ids[k] = pt.Track.ID
+		ids[k] = string(pt.Track.ID)
 	}
-	return ids, nil
+	resp := &pb.PlaylistResponse{
+		Ids: ids,
+	}
+	return resp, nil
 }
 
 func main() {
@@ -47,11 +56,15 @@ func main() {
 		user:   "kvb24",
 	}
 
-	ids, idErr := h.getTracks("71f1MdrRKbbPXhYgQGg0j0")
-	if idErr != nil {
-		log.Fatalf("%v", idErr)
+	lis, err := net.Listen("tcp", ":5000")
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
 	}
-	for _, x := range ids {
-		fmt.Println(x)
+	s := grpc.NewServer()
+	pb.RegisterDownloadPlaylistServer(s, h)
+	// Register reflection service on gRPC server.
+	reflection.Register(s)
+	if err := s.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
 	}
 }
