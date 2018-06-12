@@ -8,4 +8,3 @@ sort-pl/sort-pl
 
 # Vendor directory
 vendor/*/
-!vendor/vendor.json
