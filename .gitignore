@@ -2,9 +2,9 @@
 *.swp
 
 # Project Binaries
-download-pl/download-pl
-get-songinfo/get-songinfo
-sort-pl/sort-pl
+**/download-pl
+**/get-songinfo
+**/sort-pl
 
 # Vendor directory
 vendor/*/
