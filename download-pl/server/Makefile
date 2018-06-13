@@ -1,6 +1,6 @@
 all: docker
 
-docker: download-pl
+docker: download-pl ca-certificates.crt
 	docker build -t download-pl .
 
 download-pl: main.go ../download-pl.pb.go

@@ -1,6 +1,6 @@
 all: docker
 
-docker: get-songinfo
+docker: get-songinfo ca-certificates.crt
 	docker build -t get-songinfo .
 
 get-songinfo: main.go ../get-songinfo.pb.go
