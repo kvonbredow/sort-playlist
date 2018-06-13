@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+service SongInfo {
+  rpc GetInfo(InfoRequest) returns (InfoResponse) {}
+}
+
+message InfoRequest {
+  repeated string ids = 1;
+}
+
+message Features {
+	float Acousticness = 1;
+	string AnalysisURL = 2;
+	float Danceability = 3;
+	int64 Duration = 4;
+	float Energy = 5;
+	float Instrumentalness = 6;
+	int64 Key = 7;
+	float Liveness = 8;
+	float Loudness = 9;
+	int64 Mode = 10;
+	float Speechiness = 11;
+	float Tempo = 12;
+	int64 TimeSignature = 13;
+	string TrackURL = 14;
+	float Valence = 15;
+}
+
+message InfoResponse {
+  repeated Features afs = 1;
+}
